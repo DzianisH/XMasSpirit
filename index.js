@@ -7,6 +7,8 @@ const Gpio = require('onoff').Gpio;
 const LED1 = new Gpio(17, 'out');
 const LED2 = new Gpio(16, 'out');
 
+const fs = require('fs');
+
 const replyMarkup = bot.keyboard([
     ['/TurnOnLights'],
     ['/TurnOffLights']
@@ -19,8 +21,23 @@ bot.on(['/start', '/back', '/help'], msg => {
 });
 
 
+function logMessage(msg) {
+    let txt;
+    if (msg.from.username) {
+        txt = 'User ' + msg.from.first_name + " " + msg.from.last_name + " " + msg.from.username + " sent message " + msg.text;
+    } else {
+        txt = 'User ' + msg.from.first_name + " " + msg.from.last_name + " sent message " + msg.text;
+    }
+
+    fs.writeFile("log.log", txt, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
 bot.on(['/TurnOnLights'], msg => {
-    console.log('User ' + msg.from.username + " sent message " + msg.text);
+    logMessage(msg);
     LED1.write(0, err => {
         if (err) {
             console.error(err);
@@ -38,7 +55,7 @@ bot.on(['/TurnOnLights'], msg => {
     });
 });
 bot.on(['/TurnOffLights'], msg => {
-    console.log('User ' + msg.from.username + " sent message " + msg.text);
+    logMessage(msg);
     LED1.write(1, err => {
         if (err) {
             console.error(err);
