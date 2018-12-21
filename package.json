@@ -6,6 +6,7 @@
   "dependencies": {
     "install": "^0.12.2",
     "npm": "^6.5.0",
+    "onoff": "*",
     "telebot": "^1.2.6"
   },
   "devDependencies": {},
