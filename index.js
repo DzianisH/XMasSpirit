@@ -5,7 +5,7 @@ const bot = new TeleBot({
 
 const Gpio = require('onoff').Gpio;
 const LED1 = new Gpio(17, 'out');
-const LED2 = new Gpio(29, 'out');
+const LED2 = new Gpio(16, 'out');
 
 const replyMarkup = bot.keyboard([
     ['/TurnOnLights'],
@@ -21,17 +21,22 @@ bot.on(['/start', '/back', '/help'], msg => {
 
 bot.on(['/TurnOnLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED1.writeSync(1);
-    LED2.writeSync(1);
+    LED1.write(1, () => console.log('www'));
+//    LED2.writeSync(1);
     bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
 });
 
 bot.on(['/TurnOffLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED1.writeSync(0);
-    LED2.writeSync(0);
+    LED1.write(0, () => console.log('wow'));
+ //   LED2.writeSync(0);
     bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
 });
+
+LED1.writeSync(0);
+LED1.unexport();
+LED2.writeSync(0);
+LED2.unexport();
 
 
 process.on('SIGINT', () => {
