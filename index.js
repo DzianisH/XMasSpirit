@@ -7,8 +7,6 @@ const Gpio = require('onoff').Gpio;
 const LED1 = new Gpio(17, 'out');
 const LED2 = new Gpio(16, 'out');
 
-const fs = require('fs');
-
 const replyMarkup = bot.keyboard([
     ['/TurnOnLights'],
     ['/TurnOffLights']
@@ -29,11 +27,7 @@ function logMessage(msg) {
         txt = 'User ' + msg.from.first_name + " " + msg.from.last_name + " sent message " + msg.text;
     }
 
-    fs.writeFile("log.log", txt, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    console.log(txt);
 }
 
 bot.on(['/TurnOnLights'], msg => {
