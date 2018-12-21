@@ -45,7 +45,6 @@ bot.on(['/TurnOffLights'], msg => {
 process.on('SIGINT', () => {
     LED.writeSync(0);
     LED.unexport();
-    pushButton.unexport();
 }); //function to run when user closes using ctrl+c
 
 bot.start();
