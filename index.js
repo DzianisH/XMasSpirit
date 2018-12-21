@@ -4,7 +4,8 @@ const bot = new TeleBot({
 });
 
 const Gpio = require('onoff').Gpio;
-const LED = new Gpio(4, 'out');
+const LED1 = new Gpio(4, 'out');
+const LED2 = new Gpio(29, 'out');
 
 const replyMarkup = bot.keyboard([
     ['/TurnOnLights'],
@@ -19,26 +20,16 @@ bot.on(['/start', '/back', '/help'], msg => {
 
 bot.on(['/TurnOnLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED.write(1, (err, resp) => {
-        if (err) {
-            bot.sendMessage(msg.from.id, 'Error while switching on lights', {replyMarkup});
-            console.error(err);
-            return;
-        }
-        bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
-    });
+    LED1.writeSync(1);
+    LED2.writeSync(1);
+    bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
 });
 
 bot.on(['/TurnOffLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED.write(0, (err, resp) => {
-        if (err) {
-            bot.sendMessage(msg.from.id, 'Error while switching off lights', {replyMarkup});
-            console.error(err);
-            return;
-        }
-        bot.sendMessage(msg.from.id, 'You switched off Xmas three', {replyMarkup});
-    });
+    LED1.writeSync(0);
+    LED2.writeSync(0);
+    bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
 });
 
 
