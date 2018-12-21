@@ -4,7 +4,7 @@ const bot = new TeleBot({
 });
 
 const Gpio = require('onoff').Gpio;
-const LED1 = new Gpio(4, 'out');
+const LED1 = new Gpio(17, 'out');
 const LED2 = new Gpio(29, 'out');
 
 const replyMarkup = bot.keyboard([
@@ -17,6 +17,7 @@ bot.on(['/start', '/back', '/help'], msg => {
     console.log('User ' + msg.from.username + " started conversation");
     return bot.sendMessage(msg.from.id, 'You can switch Xmas three here', {replyMarkup});
 });
+
 
 bot.on(['/TurnOnLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
@@ -34,8 +35,10 @@ bot.on(['/TurnOffLights'], msg => {
 
 
 process.on('SIGINT', () => {
-    LED.writeSync(0);
-    LED.unexport();
+    LED1.writeSync(0);
+    LED1.unexport();
+    LED2.writeSync(0);
+    LED2.unexport();
 }); //function to run when user closes using ctrl+c
 
 bot.start();
