@@ -39,13 +39,13 @@ bot.on(['/TurnOnLights'], msg => {
 });
 bot.on(['/TurnOffLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED1.write(0, err => {
+    LED1.write(1, err => {
         if (err) {
             console.error(err);
             return;
         }
         console.log("LED1 turned off");
-        LED2.write(0, err => {
+        LED2.write(1, err => {
             if (err) {
                 console.error(err);
                 return;
