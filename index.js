@@ -21,29 +21,46 @@ bot.on(['/start', '/back', '/help'], msg => {
 
 bot.on(['/TurnOnLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED1.write(1, () => console.log('www'));
-//    LED2.writeSync(1);
-    bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
+    LED1.write(0, err => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log("LED1 turned on");
+        LED2.write(0, err => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log("LED2 turned on");
+            bot.sendMessage(msg.from.id, 'You switched on Xmas tree', {replyMarkup});
+        })
+    });
 });
-
 bot.on(['/TurnOffLights'], msg => {
     console.log('User ' + msg.from.username + " sent message " + msg.text);
-    LED1.write(0, () => console.log('wow'));
- //   LED2.writeSync(0);
-    bot.sendMessage(msg.from.id, 'You switched on Xmas three', {replyMarkup});
+    LED1.write(0, err => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log("LED1 turned off");
+        LED2.write(0, err => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log("LED2 turned off");
+            bot.sendMessage(msg.from.id, 'You switched off Xmas tree', {replyMarkup});
+        })
+    });
 });
 
-LED1.writeSync(0);
-LED1.unexport();
-LED2.writeSync(0);
-LED2.unexport();
-
-
 process.on('SIGINT', () => {
-    LED1.writeSync(0);
-    LED1.unexport();
-    LED2.writeSync(0);
-    LED2.unexport();
+    LED1.write(0, () => {
+        LED1.unexport();
+        LED2.write(0, () => LED2.unexport());
+    });
 }); //function to run when user closes using ctrl+c
 
 bot.start();
