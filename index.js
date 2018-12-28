@@ -1,16 +1,44 @@
 const TeleBot = require('telebot');
+
+const BUTTONS = {
+	on: {
+		label: 'Turn On',
+		command: '/TurnOn'
+	},
+	off: {
+		label: 'Turn Off',
+		command: '/TurnOff'
+	},
+	blink: {
+		label: 'Start Blinking',
+		command: '/Blink'
+	},
+	status: {
+		label: 'Get Lights Status',
+		command: '/Status'
+	},
+};
+
 const bot = new TeleBot({
-	token: '742600804:AAHVflkpctW6p1fRS6RVuLxlFqWY6IB9kuM'
+	token: '742600804:AAHVflkpctW6p1fRS6RVuLxlFqWY6IB9kuM',
+	usePlugins: ['namedButtons'],
+	pluginConfig: {
+		namedButtons: {
+			buttons: BUTTONS
+		}
+	}
 });
 
 const Gpio = require('onoff').Gpio;
 const LED1 = new Gpio(17, 'out');
 const LED2 = new Gpio(16, 'out');
+// const LED1 = {write: () => {}};
+// const LED2 = {write: () => {}};
 
 const replyMarkup = bot.keyboard(
 	[
-		[bot.button('/TurnOn', 'Turn On'), bot.button('/Blink', 'Start Blinking'), bot.button('/TurnOff', 'Turn Off')],
-		[bot.button('/Status', 'Get Lights Status')]
+		[BUTTONS.on.label, BUTTONS.blink.label, BUTTONS.off.label],
+		[BUTTONS.status.label]
 	], {resize: true});
 
 let state = 'off';
