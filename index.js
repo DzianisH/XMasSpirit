@@ -131,7 +131,7 @@ bot.on(['/Blink'], msg => {
 		} else {
 			LED1.write(0, () => state1 = 'on');
 		}
-	}, 1000);
+	}, 900);
 	const ledBlink2 = setInterval(() => {
 		if (state !== 'blink') {
 			clearTimeout(ledBlink1);
@@ -142,7 +142,7 @@ bot.on(['/Blink'], msg => {
 		} else {
 			LED2.write(0, () => state2 = 'on');
 		}
-	}, 618);
+	}, 556);
 	state = 'blink';
 	bot.sendMessage(msg.from.id, 'You blink Xmas tree', {replyMarkup});
 });
