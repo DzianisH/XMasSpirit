@@ -7,15 +7,13 @@ const Gpio = require('onoff').Gpio;
 const LED1 = new Gpio(17, 'out');
 const LED2 = new Gpio(16, 'out');
 
-const replyMarkup = bot.keyboard([['/TurnOn', '/TurnOff', '/Blink'], ['/Status']], {resize: true});
+const replyMarkup = bot.keyboard(
+	[
+		[bot.button('/TurnOn', 'Turn On'), bot.button('/Blink', 'Start Blinking'), bot.button('/TurnOff', 'Turn Off')],
+		[bot.button('/Status', 'Get Lights Status')]
+	], {resize: true});
 
 let state = 'off';
-
-bot.on(msg => {
-    console.log('User ' + msg.from.username + " started conversation");
-    return bot.sendMessage(msg.from.id, 'You can switch Xmas three here', {replyMarkup});
-});
-
 
 function logMessage(msg) {
     let txt;
@@ -29,6 +27,7 @@ function logMessage(msg) {
 }
 
 bot.on(['/TurnOn'], msg => {
+    msg.processed = true;
     logMessage(msg);
     if (state === 'on') {
         bot.sendMessage(msg.from.id, 'LEDs are already turned on', {replyMarkup});
@@ -53,6 +52,7 @@ bot.on(['/TurnOn'], msg => {
 });
 
 bot.on(['/TurnOff'], msg => {
+    msg.processed = true;
     logMessage(msg);
     if (state === 'off') {
         bot.sendMessage(msg.from.id, 'LEDs are already turned off', {replyMarkup});
@@ -77,11 +77,13 @@ bot.on(['/TurnOff'], msg => {
 });
 
 bot.on(['/Status'], msg => {
+    msg.processed = true;
     logMessage(msg);
     bot.sendMessage(msg.from.id, 'LEDs are ' + state + ' now', {replyMarkup});
 });
 
 bot.on(['/Blink'], msg => {
+    msg.processed = true;
     logMessage(msg);
     if (state === 'blink') {
         bot.sendMessage(msg.from.id, 'LEDs are already blinking', {replyMarkup});
@@ -115,6 +117,14 @@ bot.on(['/Blink'], msg => {
     }, 618);
     state = 'blink';
     bot.sendMessage(msg.from.id, 'You blink Xmas tree', {replyMarkup});
+});
+
+
+bot.on(['text'], msg => {
+    if(!msg.processed) {
+        logMessage(msg);
+        bot.sendMessage(msg.from.id, 'You can switch Xmas three here', {replyMarkup});
+    }
 });
 
 process.on('SIGINT', () => {
